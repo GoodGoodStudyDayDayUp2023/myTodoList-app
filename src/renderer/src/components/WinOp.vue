@@ -1,9 +1,12 @@
 <template>
   <div class="win-controls">
-    <img class="normal-btn" @click="minimize" src="@/assets/images/minimize.png" />
+    <!-- <img class="normal-btn" @click="minimize" src="@/assets/images/minimize.png" />
     <img class="normal-btn" @click="maximize" src="@/assets/images/maximize.png" />
     <img class="close-btn" @click="close" :src="isCloseHover ? closeHoverIcon : closeIcon"
-      @mouseenter="isCloseHover = true" @mouseleave="isCloseHover = false" />
+      @mouseenter="isCloseHover = true" @mouseleave="isCloseHover = false" /> -->
+    <template v-for="item in opList">
+      <img class="normal-btn" @click="minimize" src="@/assets/images/minimize.png" />
+    </template>
   </div>
 </template>
 
@@ -23,6 +26,14 @@ import closeIcon from "@/assets/images/close.png"
 import closeHoverIcon from "@/assets/images/close_hover.png"
 
 const isCloseHover = ref(false)
+
+
+const opList = ref([
+  { icon: minimizeIcon, hoverIcon: minimizeHoverIcon, opCode: 1 },
+  { icon: maximizeIcon, hoverIcon: maximizeHoverIcon, opCode: 2 },
+  { icon: restoreIcon, hoverIcon: restoreHoverIcon, opCode: 3 },
+  { icon: closeIcon, hoverIcon: closeHoverIcon, opCode: 0 },
+])
 
 const minimize = () => window.electronAPI.minimize()
 const maximize = () => window.electronAPI.maximize()
