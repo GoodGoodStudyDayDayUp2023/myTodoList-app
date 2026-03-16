@@ -9,15 +9,19 @@ export default defineConfig({
   preload: {
     plugins: [externalizeDepsPlugin()],
     build: {
-      rollupOptions: {
-        input: resolve(__dirname, 'src/preload/index.js')
+      rollupOptions: {  
+        input: resolve(__dirname, 'src/preload/index.js'),
+         output: {
+        format: 'cjs',
+        entryFileNames: '[name].js'
+      }
       }
     }
   },
   renderer: {
     resolve:{
       alias:{
-        "@":resolve("src/renderer")
+        "@":resolve("src/renderer/src")
       }
     },
     plugins: [vue()]

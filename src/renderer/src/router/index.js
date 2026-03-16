@@ -12,7 +12,7 @@ const router =createRouter({
     {
       path:"/today",
       name:"今日待办",
-      component:()=>import("@/views/Calendar.vue")
+      component:()=>import("@/views/Today.vue")
     },
     {
       path:"/calendar",
