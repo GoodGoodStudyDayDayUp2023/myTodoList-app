@@ -151,13 +151,12 @@ import EmptyState from "@/components/EmptyState.vue"
 const vFocus = { mounted: (el) => el.focus() }
 
 // ── 日历逻辑 ─────────────────────────────────────────
-const weekdays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+const weekdays = ["日", "一", "二", "三", "四", "五", "六"]
 const viewYear = ref(new Date().getFullYear())
 const viewMonth = ref(new Date().getMonth())
 
 const monthLabel = computed(() =>
-  new Date(viewYear.value, viewMonth.value, 1)
-    .toLocaleDateString("en-US", { month: "long", year: "numeric" })
+  `${viewYear.value}年${viewMonth.value + 1}月`
 )
 
 const prevMonth = () => {
@@ -356,15 +355,15 @@ const confirmEdit = async (item) => {
         }
 
         &.today {
-          background: #1f2937;
-          color: #fff;
+          background: #eef2ff;
+          color: #6d4ef7;
           font-weight: 700;
         }
 
-        &.selected:not(.today) {
-          background: #eef2ff;
-          color: #6d4ef7;
-          font-weight: 600;
+        &.selected {
+          background: #1f2937;
+          color: #fff;
+          font-weight: 700;
         }
 
         // 有待办打点

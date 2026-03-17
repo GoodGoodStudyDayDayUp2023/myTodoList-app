@@ -128,6 +128,7 @@ import { ref, computed, onMounted } from "vue"
 import StatCard from "@/components/StatCard.vue"
 import EmptyState from "@/components/EmptyState.vue"
 import { normalizeRow, toDateStr } from '@/utils/tool'
+import { ElMessage } from 'element-plus'
 
 // 自动聚焦指令
 const vFocus = { mounted: (el) => el.focus() }
@@ -155,12 +156,15 @@ const addTodo = async () => {
   if (!text) return
 
   const createdAt = Date.now()
-  const dateStr = toDateStr()  // 默认今天，不需要传参
-
-  // 以数据库返回的数据为准（id 由数据库自增生成）
+  const dateStr = toDateStr()
   const newTodo = await window.electronAPI.add(text, dateStr, createdAt)
-  todoList.value.unshift(normalizeRow(newTodo))
-  inputText.value = ""
+  if (newTodo.success) {
+    todoList.value.unshift(normalizeRow(newTodo.data))
+    inputText.value = ""
+  } else {
+    ElMessage.error(newTodo.message || '添加失败，请重试')
+  }
+
 }
 
 const toggleTodo = async (item) => {

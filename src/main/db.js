@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3'
 import { app } from 'electron'
 import path from 'path'
-import fs from 'fs'
+import { responseMessage } from './tool'
 
 // 数据库存在用户数据目录，不会因重新打包丢失
 const dbDir = app.getPath('userData')
@@ -16,7 +16,7 @@ db.pragma('journal_mode = WAL')
 db.exec(`
   CREATE TABLE IF NOT EXISTS todos (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    text        TEXT    NOT NULL CHECK(length(trim(text)) > 0),  -- 不能是空字符串
+    text        TEXT    NOT NULL CHECK(length(trim(text)) > 0 AND length(trim(text)) <= 1000),  -- 不能是空字符串
     done        INTEGER NOT NULL DEFAULT 0 CHECK(done IN (0, 1)),-- 只能是 0 或 1
     date_str    TEXT    NOT NULL CHECK(date_str GLOB '????-??-??'), -- 必须是 yyyy-MM-dd 格式
     created_at  INTEGER NOT NULL CHECK(created_at > 0)           -- 必须是正整数时间戳
@@ -39,25 +39,37 @@ export const todoDb = {
 
   // db.js 的 add 方法加入参数校验
   add(text, dateStr, createdAt) {
-    if (!text?.trim()) throw new Error('text 不能为空')
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr))
-      throw new Error('dateStr 格式错误')
+    const trimmed = text?.trim()
+    if (!trimmed) {
+      return responseMessage(false, 'CONTENT_EMPTY', '内容不能为空')
+    }
+    if (trimmed.length > 1000) {
+      return responseMessage(
+        false,
+        'CONTENT_TOO_LONG',
+        '内容不能超过1000个字符'
+      )
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return responseMessage(false, 'INVALID_DATE', 'dateStr 格式错误')
+    }
     if (!Number.isInteger(createdAt) || createdAt <= 0)
-      throw new Error('createdAt 非法')
+      return responseMessage(false, 'INVALID_CREATED_AT', 'createdAt 非法')
 
-    const stmt = db.prepare(
-      'INSERT INTO todos (text, done, date_str, created_at) VALUES (?, 0, ?, ?)'
-    )
-    const result = stmt.run(text.trim(), dateStr, createdAt)
-    return {
+    const result = db
+      .prepare(
+        'INSERT INTO todos (text, done, date_str, created_at) VALUES (?, 0, ?, ?)'
+      )
+      .run(trimmed, dateStr, createdAt)
+
+    return responseMessage(true, 'SUCCESS', '添加成功', {
       id: result.lastInsertRowid,
-      text: text.trim(),
+      text: trimmed,
       done: 0,
       date_str: dateStr,
       created_at: createdAt,
-    }
+    })
   },
-
   toggle(id, done) {
     const result = db
       .prepare('UPDATE todos SET done = ? WHERE id = ?')
