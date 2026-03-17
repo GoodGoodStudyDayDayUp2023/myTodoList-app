@@ -1,5 +1,25 @@
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import { join } from 'path'
+import { todoDb } from './db'
+
+// 在 createWindow 之后注册 IPC handlers
+function registerIpcHandlers() {
+  ipcMain.handle('todo:getAll', () => todoDb.getAll())
+  ipcMain.handle('todo:getByDate', (_, dateStr) => todoDb.getByDate(dateStr))
+  ipcMain.handle('todo:add', (_, text, dateStr, createdAt) =>
+    todoDb.add(text, dateStr, createdAt)
+  )
+  ipcMain.handle('todo:toggle', (_, id, done) => todoDb.toggle(id, done))
+  ipcMain.handle('todo:updateText', (_, id, text) =>
+    todoDb.updateText(id, text)
+  )
+  ipcMain.handle('todo:delete', (_, id) => todoDb.delete(id))
+  ipcMain.handle('window-minimize', () => mainWin.minimize())
+  ipcMain.handle('window-maximize', () => {
+    mainWin.isMaximized() ? mainWin.unmaximize() : mainWin.maximize()
+  })
+  ipcMain.handle('window-close', () => mainWin.close())
+}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -24,13 +44,17 @@ function createWindow() {
   } else {
     win.loadFile(join(__dirname, '../renderer/index.html')) // 生产模式
   }
+  return win
 }
+
+let mainWin = {}
 
 app.whenReady().then(() => {
   app.commandLine.appendSwitch('high-dpi-support', '1') // 👈 加这行
   app.commandLine.appendSwitch('force-device-scale-factor', '1') // 👈 加这行
   Menu.setApplicationMenu(null)
-  createWindow()
+  mainWin = createWindow()
+  registerIpcHandlers()
 })
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
