@@ -4,26 +4,27 @@ import { resolve } from 'path'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
     build: {
-      rollupOptions: {  
+      rollupOptions: {
         input: resolve(__dirname, 'src/preload/index.js'),
-         output: {
-        format: 'cjs',
-        entryFileNames: '[name].js'
-      }
-      }
-    }
+        output: {
+          format: 'cjs',
+          entryFileNames: '[name].js',
+        },
+      },
+    },
   },
   renderer: {
-    resolve:{
-      alias:{
-        "@":resolve("src/renderer/src")
-      }
+    base: './',
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, 'src/renderer/src'),
+      },
     },
-    plugins: [vue()]
-  }
+    plugins: [vue()],
+  },
 })

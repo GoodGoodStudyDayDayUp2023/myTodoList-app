@@ -37,10 +37,9 @@ function createWindow() {
     },
   })
 
-  win.webContents.openDevTools()
-
   if (process.env['ELECTRON_RENDERER_URL']) {
     win.loadURL(process.env['ELECTRON_RENDERER_URL']) // 开发模式加载 Vite
+    win.webContents.openDevTools()
   } else {
     win.loadFile(join(__dirname, '../renderer/index.html')) // 生产模式
   }
