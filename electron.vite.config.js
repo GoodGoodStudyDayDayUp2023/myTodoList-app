@@ -20,6 +20,7 @@ export default defineConfig({
   },
   renderer: {
     base: './',
+    publicDir: resolve(__dirname, 'src/renderer/src/public'),
     resolve: {
       alias: {
         '@': resolve(__dirname, 'src/renderer/src'),

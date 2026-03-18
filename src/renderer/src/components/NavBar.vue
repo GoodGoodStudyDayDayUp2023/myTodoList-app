@@ -2,7 +2,7 @@
   <div class="navbar">
     <div class="menu-box">
       <div class="img-box">
-        <img class="img-logo" src="@/assets/images/logo.png" alt="logo" />
+        <img class="img-logo" :src="logoImg" alt="logo" />
         <div class="text-box">
           <span class="title-text">{{ activeMenu?.name }}</span>
           <span class="description-text">{{ activeMenu?.description }}</span>
@@ -30,28 +30,28 @@
 import { ref, watch } from "vue"
 import { useRouter, useRoute } from "vue-router"
 import WinOp from "./WinOp.vue"
-import todayIcon from "@/assets/images/today.png"
-import calendarIcon from "@/assets/images/calendar.png"
-import profileIcon from "@/assets/images/profile.png"
-import todayActiveIcon from "@/assets/images/today_active.png"
-import calendarActiveIcon from "@/assets/images/calendar_active.png"
-import profileActiveIcon from "@/assets/images/profile_active.png"
+
 
 const router = useRouter()
 const route = useRoute()
 
+const logoImg = "./images/logo.png"  // 加这行
+
 const menuList = ref([
   {
     name: "今日待办", path: "/today", description: "管理今天的任务清单",
-    icon: todayIcon, activeIcon: todayActiveIcon,
+    icon: "./images/today.png",
+    activeIcon: "./images/today_active.png",
   },
   {
     name: "日历", path: "/calendar", description: "查看不同日期的待办事项",
-    icon: calendarIcon, activeIcon: calendarActiveIcon,
+    icon: "./images/calendar.png",
+    activeIcon: "./images/calendar_active.png",
   },
   {
     name: "我的", path: "/profile", description: "个人数据统计与分析",
-    icon: profileIcon, activeIcon: profileActiveIcon,
+    icon: "./images/profile.png",
+    activeIcon: "./images/profile_active.png",
   },
 ])
 

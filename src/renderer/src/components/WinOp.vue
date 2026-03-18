@@ -10,22 +10,13 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue"
 
-import minimizeIcon from "@/assets/images/minimize.png"
-import minimizeHoverIcon from "@/assets/images/minimize_hover.png"
-import maximizeIcon from "@/assets/images/maximize.png"
-import maximizeHoverIcon from "@/assets/images/maximize_hover.png"
-import restoreIcon from "@/assets/images/restore.png"
-import restoreHoverIcon from "@/assets/images/restore_hover.png"
-import closeIcon from "@/assets/images/close.png"
-import closeHoverIcon from "@/assets/images/close_hover.png"
-
 const isMaximized = ref(false)
 
 const opList = ref([
-  { icon: minimizeIcon, hoverIcon: minimizeHoverIcon, opCode: 1, isHover: false },
-  { icon: maximizeIcon, hoverIcon: maximizeHoverIcon, opCode: 2, isHover: false }, // 未最大化时显示
-  { icon: restoreIcon, hoverIcon: restoreHoverIcon, opCode: 3, isHover: false }, // 最大化后显示
-  { icon: closeIcon, hoverIcon: closeHoverIcon, opCode: 0, isHover: false },
+  { icon: "./images/minimize.png", hoverIcon: "./images/minimize_hover.png", opCode: 1, isHover: false },
+  { icon: "./images/maximize.png", hoverIcon: "./images/maximize_hover.png", opCode: 2, isHover: false },
+  { icon: "./images/restore.png", hoverIcon: "./images/restore_hover.png", opCode: 3, isHover: false },
+  { icon: "./images/close.png", hoverIcon: "./images/close_hover.png", opCode: 0, isHover: false },
 ])
 
 // 根据窗口状态过滤按钮：最大化时显示 restore(3)，否则显示 maximize(2)
