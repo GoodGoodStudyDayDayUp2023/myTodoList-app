@@ -39,6 +39,10 @@
 ## 截图展示
 
 > 应用采用简洁的顶部导航栏设计，支持今日待办、日历、我的三大模块切换，激活菜单高亮显示。
+![今日待办](./screenshots/today.png)
+![日历视图](./screenshots/calendar.png)
+![我的](./screenshots/profile.png)
+
 
 ---
 
